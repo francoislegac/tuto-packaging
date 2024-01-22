@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: first-python-package
+Version: 0.0.1
+Summary: This package does amazing things
+Home-page: https://github.com/username/package/reponame
+Author-email: given.family@example.com
+License-File: LICENSE
+Requires-Dist: termcolor<2,>=1.1.0
+
+# first-python-package
+This package does amazing things.
+## Installation
+```shell
+$ python -m pip install first-python-package
+```
