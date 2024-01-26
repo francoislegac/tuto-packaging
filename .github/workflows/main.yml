@@ -1,13 +1,77 @@
-name : My first Workflow
+name : Packaging
 
 on:
   - push
 
 jobs:
-  say-hello:
-    name: Say Hello
+  format:
+    name: Check formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Say Hello
-        run: echo "Hello"
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.9"
+
+      - name: Install Tox
+        run: python -m pip install tox
+
+      - name: Run black
+        run: tox -e format
+
+
+  linting:
+    name: Check linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.9"
+      
+      - name: Install Tox
+        run: python -m pip install tox
+      
+      - name: Run Flake 8
+        run: tox -e lint
+
+  type-checking:
+    name: Check the type
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.9"
+      
+      - name: Install Tox
+        run: python -m pip install tox
+      
+      - name: Run typecheck
+        run: python -m tox -e typecheck
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python:
+          - version: "3.9"
+            toxenv: "py39"
+          - version:  "3.8" 
+            toxenv: "py38"
+    setps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: ${{ matrix.python.version }}
+      
+      - name: Install tox
+        run: python -m pip install tox
+      
+      - name: Run pytest
+        run: tox -e ${{ matrix.python.toxenv }}
